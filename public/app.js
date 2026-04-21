@@ -185,8 +185,8 @@ function renderOrders(orders, containerId) {
     if (orders.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 4rem; background: var(--bg-card); border-radius: 24px; border: 1px dashed var(--border); grid-column: 1 / -1;">
-                <p style="font-size: 1.5rem; margin-bottom: 0.5rem;">📭</p>
-                <p style="color: var(--text-secondary);">No data available in this section.</p>
+                <div style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"><i data-lucide="inbox"></i></div>
+                <p style="color: var(--text-secondary);">No active transactions in this section.</p>
             </div>
         `;
         return;
@@ -213,10 +213,10 @@ function renderOrders(orders, containerId) {
                         <img src="${order.image}" class="prescription-thumb" onclick="openModal('${order.image}')" alt="Rx">
                         <div>
                             <p style="font-size: 0.875rem; color: #fff; font-weight: 600;">Prescription</p>
-                            <p class="patient-meta">Uploaded Image</p>
+                            <p class="patient-meta">Clinical Image</p>
                         </div>
                     ` : `
-                        <div style="font-size: 1.25rem;">📝</div>
+                        <div style="font-size: 1.25rem; opacity: 0.5;"><i data-lucide="file-text"></i></div>
                         <p class="notes-text" title="${order.notes || ''}">${order.notes || 'No specific notes'}</p>
                     `}
                 </div>
@@ -242,6 +242,9 @@ function renderOrders(orders, containerId) {
             </div>
         `;
     }).join('');
+
+    // Refresh icons
+    if (window.lucide) lucide.createIcons();
 }
 
 // Navigation Events
@@ -287,16 +290,16 @@ document.getElementById('noti-toggle').addEventListener('click', function() {
     const icon = document.getElementById('noti-icon');
     const text = document.getElementById('noti-text');
     if (alertsEnabled) {
-        icon.textContent = '🔔';
-        text.textContent = 'Alerts On';
+        icon.innerHTML = '<i data-lucide="bell"></i>';
+        text.textContent = 'Alerts Active';
         this.style.color = 'var(--primary)';
-        // Play a small sound to confirm
         alertSound.play().catch(() => {});
     } else {
-        icon.textContent = '🔕';
-        text.textContent = 'Alerts Off';
+        icon.innerHTML = '<i data-lucide="bell-off"></i>';
+        text.textContent = 'Alerts Muted';
         this.style.color = 'var(--text-muted)';
     }
+    if (window.lucide) lucide.createIcons();
 });
 
 // Bot Management Events
