@@ -432,6 +432,11 @@ header {
     cursor: pointer;
 }
 
+/* Bottom Navigation (Hidden by default on PC) */
+.bottom-nav {
+    display: none;
+}
+
 /* 📱 Responsive Design & Media Queries */
 
 /* Tablet & Smaller Desktop (769px to 1100px) */
