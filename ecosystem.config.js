@@ -15,7 +15,9 @@ module.exports = {
         instances: 1,
         autorestart: true,
         watch: false,
-        max_memory_restart: '1G',
+        max_memory_restart: '450M', // Restart bot if it hits 450MB to save the server
+        cron_restart: '0 */6 * * *', // Restart every 6 hours to keep it fresh
+        restart_delay: 5000,
         env: {
             NODE_ENV: 'production'
         },
