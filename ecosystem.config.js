@@ -15,29 +15,13 @@ module.exports = {
         instances: 1,
         autorestart: true,
         watch: false,
-        max_memory_restart: '450M', // Restart bot if it hits 450MB to save the server
-        cron_restart: '0 */6 * * *', // Restart every 6 hours to keep it fresh
-        restart_delay: 5000,
+        max_memory_restart: '450M',
+        restart_delay: 10000,
         env: {
             NODE_ENV: 'production'
         },
         error_file: './logs/err.log',
         out_file: './logs/out.log',
-        log_file: './logs/combined.log',
-        time: true
-    },
-    {
-        name: 'bot-monitor',
-        script: 'monitor.js',
-        instances: 1,
-        autorestart: true,
-        watch: false,
-        env: {
-            NODE_ENV: 'production'
-        },
-        error_file: './logs/monitor-err.log',
-        out_file: './logs/monitor-out.log',
-        log_file: './logs/monitor-combined.log',
         time: true
     }]
 };

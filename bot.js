@@ -48,8 +48,7 @@ const client = new Client({
         clientId: 'medical-shop-bot'
     }),
     webVersionCache: {
-        type: 'remote',
-        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1014559843-alpha.html',
+        type: 'none', // Disable cache to save RAM
     },
 
     puppeteer: {
@@ -396,10 +395,20 @@ client.on('disconnected', (reason) => {
 
     // Attempt to reconnect after 30 seconds
     setTimeout(() => {
-        console.log('Attempting to reconnect...');
-        client.initialize();
+        if (!client.pupPage || client.pupPage.isClosed()) {
+            console.log('Attempting to reconnect...');
+            client.initialize();
+        }
     }, 30000);
 });
+
+// Periodic memory cleanup (Every 30 minutes)
+setInterval(() => {
+    if (global.gc) {
+        global.gc();
+        console.log('🗑️ Manual garbage collection performed');
+    }
+}, 1800000);
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
