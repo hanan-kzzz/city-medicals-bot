@@ -432,6 +432,11 @@ header {
     cursor: pointer;
 }
 
+/* Freeze background when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
 /* Bottom Navigation (Hidden by default on PC) */
 .bottom-nav {
     display: none;

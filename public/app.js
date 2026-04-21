@@ -381,15 +381,18 @@ const modalImg = document.getElementById('modal-img');
 function openModal(src) {
     modal.style.display = 'flex';
     modalImg.src = src;
+    document.body.classList.add('modal-open');
 }
 
 document.getElementById('close-modal').onclick = () => {
     modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
 };
 
 window.onclick = (event) => {
     if (event.target == modal) {
         modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
     }
 };
 
