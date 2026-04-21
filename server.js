@@ -1,7 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+const ffmpeg = require('ffmpeg-static');
 require('dotenv').config();
 
 const app = express();
@@ -13,6 +15,64 @@ const CONFIG = {
     USER: 'admin',
     PASS: process.env.DASHBOARD_PASSWORD || 'admin123'
 };
+
+// Initialize WhatsApp Client
+const authPath = path.resolve(process.cwd(), 'whatsapp-bot-auth');
+const client = new Client({
+    authStrategy: new LocalAuth({
+        dataPath: authPath,
+        clientId: 'medical-shop-bot'
+    }),
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1014559843-alpha.html',
+    },
+    puppeteer: {
+        headless: "new",
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process', // This helps a lot with memory
+            '--disable-gpu'
+        ]
+    }
+});
+
+let qrCodeData = null;
+let botStatus = 'INITIALIZING';
+
+client.on('qr', (qr) => {
+    qrCodeData = qr;
+    botStatus = 'AWAITING_SCAN';
+    console.log('QR RECEIVED', qr);
+});
+
+client.on('ready', () => {
+    console.log('✅ WhatsApp bot is READY!');
+    qrCodeData = null;
+    botStatus = 'ONLINE';
+});
+
+client.on('authenticated', () => {
+    console.log('✅ Authenticated');
+    botStatus = 'AUTHENTICATED';
+});
+
+client.on('auth_failure', () => {
+    botStatus = 'AUTH_FAILED';
+});
+
+client.on('disconnected', () => {
+    botStatus = 'DISCONNECTED';
+});
+
+// Start WhatsApp
+client.initialize();
 
 // Middleware
 app.use(express.json());
@@ -41,78 +101,39 @@ app.get('/api/orders', authMiddleware, (req, res) => {
     }
 });
 
-// Bot Control API
-app.get('/api/bot/status', authMiddleware, (req, res) => {
-    exec('pm2 jlist', (err, stdout) => {
-        if (err) return res.status(500).json({ status: 'OFFLINE', error: err.message });
-        try {
-            const list = JSON.parse(stdout);
-            const bot = list.find(p => p.name === 'whatsapp-bot');
-            if (bot) {
-                res.json({
-                    status: bot.pm2_env.status === 'online' ? 'ONLINE' : 'STOPPED',
-                    uptime: bot.pm2_env.pm_uptime,
-                    memory: bot.monit.memory,
-                    cpu: bot.monit.cpu
-                });
-            } else {
-                res.json({ status: 'NOT_FOUND' });
-            }
-        } catch (e) {
-            res.status(500).json({ status: 'ERROR' });
-        }
+// Bot Status API for Dashboard
+app.get('/api/bot/state', authMiddleware, (req, res) => {
+    res.json({
+        state: botStatus,
+        qr: qrCodeData
     });
 });
 
-app.post('/api/bot/start', authMiddleware, (req, res) => {
-    // We try to restart if it exists, or start if it doesn't
-    exec('pm2 restart whatsapp-bot', (err) => {
-        if (err) {
-            // If restart fails, it might not be in the list, so we start it using the config
-            exec('pm2 start ecosystem.config.js --only whatsapp-bot', (err2) => {
-                if (err2) return res.status(500).json({ success: false, error: err2.message });
-                res.json({ success: true, message: 'Bot started' });
-            });
-        } else {
-            res.json({ success: true, message: 'Bot restarted' });
-        }
-    });
-});
-
-app.post('/api/bot/stop', authMiddleware, (req, res) => {
-    exec('pm2 stop whatsapp-bot', (err) => {
-        if (err) return res.status(500).json({ success: false, error: err.message });
-        res.json({ success: true, message: 'Bot stopped' });
-    });
-});
-
-// Proxy: Complete order (Sends to bot on port 3005)
+// Helper for sending messages
 app.post('/api/orders/:id/complete', authMiddleware, async (req, res) => {
     try {
-        const id = req.params.id;
-        const auth = req.headers.authorization;
-        const response = await fetch(`http://localhost:3005/api/orders/${id}/complete`, {
-            method: 'POST',
-            headers: { 'Authorization': auth }
-        });
-        const data = await response.json();
-        res.status(response.status).json(data);
-    } catch (err) {
-        res.status(503).json({ error: 'Bot is currently OFFLINE. Please start it to complete orders.' });
-    }
-});
+        const orderId = req.params.id;
+        const data = JSON.parse(fs.readFileSync(ORDERS_FILE, 'utf8'));
+        const order = data.orders.find(o => o.id == orderId);
 
-// Proxy: Bot Status Detail (QR Code etc.)
-app.get('/api/status', authMiddleware, async (req, res) => {
-    try {
-        const response = await fetch('http://localhost:3005/api/bot/state');
-        const data = await response.json();
-        res.json(data);
+        if (order) {
+            order.status = 'COMPLETED';
+            fs.writeFileSync(ORDERS_FILE, JSON.stringify(data, null, 2));
+
+            if (botStatus === 'ONLINE') {
+                const patientId = order.contact.includes('@c.us') ? order.contact : `${order.contact}@c.us`;
+                const msg = `✅ *ORDER COMPLETED*\nDear *${order.name}*, your order is ready! 🏥`;
+                await client.sendMessage(patientId, msg);
+            }
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: 'Order not found' });
+        }
     } catch (err) {
-        res.json({ status: 'OFFLINE' });
+        res.status(500).json({ error: 'Failed' });
     }
 });
 
 app.listen(port, () => {
-    console.log(`🚀 Dashboard server running at http://localhost:${port}`);
+    console.log(`🚀 Unified Server running at http://localhost:${port}`);
 });
