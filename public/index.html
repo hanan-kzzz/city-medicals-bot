@@ -12,26 +12,28 @@
         <!-- Sidebar -->
         <aside>
             <div class="logo-container">
-                <div class="logo-icon"><i data-lucide="activity"></i></div>
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z"/></svg>
+                </div>
                 <div class="logo-name">CityMedicals</div>
             </div>
             
             <nav>
                 <div class="nav-links">
                     <a href="#" class="nav-item active" id="nav-dashboard">
-                        <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
                         <span class="nav-text">Dashboard</span>
                     </a>
                     <a href="#" class="nav-item" id="nav-orders">
-                        <span class="nav-icon"><i data-lucide="package"></i></span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
                         <span class="nav-text">Orders</span>
                     </a>
                     <a href="#" class="nav-item" id="nav-status">
-                        <span class="nav-icon"><i data-lucide="smartphone"></i></span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></span>
                         <span class="nav-text">Bot Status</span>
                     </a>
                     <a href="#" class="nav-item" id="nav-logout" style="margin-top: 2rem; color: var(--danger); opacity: 0.8;">
-                        <span class="nav-icon"><i data-lucide="log-out"></i></span>
+                        <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg></span>
                         <span class="nav-text">Logout</span>
                     </a>
                 </div>
@@ -66,21 +68,21 @@
                 <section class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><i data-lucide="package-check"></i></div>
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
                         </div>
                         <div class="stat-value" id="stat-total">0</div>
                         <div class="stat-label">Total Transactions</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i data-lucide="clock"></i></div>
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                         </div>
                         <div class="stat-value" id="stat-pending">0</div>
                         <div class="stat-label">Awaiting Verification</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-header">
-                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i data-lucide="trending-up"></i></div>
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
                         </div>
                         <div class="stat-value" id="stat-today">0</div>
                         <div class="stat-label">Today's Intake</div>
@@ -173,19 +175,19 @@
     <!-- Bottom Navigation (Mobile Only) -->
     <nav class="bottom-nav">
         <a href="#" class="mobile-nav-item active" id="m-nav-dashboard">
-            <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
             <span class="nav-text">Home</span>
         </a>
         <a href="#" class="mobile-nav-item" id="m-nav-orders">
-            <span class="nav-icon"><i data-lucide="package"></i></span>
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
             <span class="nav-text">Orders</span>
         </a>
         <a href="#" class="mobile-nav-item" id="m-nav-status">
-            <span class="nav-icon"><i data-lucide="smartphone"></i></span>
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></span>
             <span class="nav-text">Status</span>
         </a>
         <a href="#" class="mobile-nav-item" id="m-nav-logout" style="color: var(--danger);">
-            <span class="nav-icon"><i data-lucide="log-out"></i></span>
+            <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg></span>
             <span class="nav-text">Exit</span>
         </a>
     </nav>

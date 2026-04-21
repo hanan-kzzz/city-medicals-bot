@@ -185,8 +185,10 @@ function renderOrders(orders, containerId) {
     if (orders.length === 0) {
         container.innerHTML = `
             <div style="text-align: center; padding: 4rem; background: var(--bg-card); border-radius: 24px; border: 1px dashed var(--border); grid-column: 1 / -1;">
-                <div style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"><i data-lucide="inbox"></i></div>
-                <p style="color: var(--text-secondary);">No active transactions in this section.</p>
+                <div style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-inline: auto;"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7"/><path d="M22 13a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2"/><path d="M22 13l-5 5H7l-5-5"/><path d="m11 4 1 1.5L13 4"/></svg>
+                </div>
+                <p style="color: var(--text-secondary);">No medical data available in this section.</p>
             </div>
         `;
         return;
@@ -213,11 +215,13 @@ function renderOrders(orders, containerId) {
                         <img src="${order.image}" class="prescription-thumb" onclick="openModal('${order.image}')" alt="Rx">
                         <div>
                             <p style="font-size: 0.875rem; color: #fff; font-weight: 600;">Prescription</p>
-                            <p class="patient-meta">Clinical Image</p>
+                            <p class="patient-meta">Clinical Records</p>
                         </div>
                     ` : `
-                        <div style="font-size: 1.25rem; opacity: 0.5;"><i data-lucide="file-text"></i></div>
-                        <p class="notes-text" title="${order.notes || ''}">${order.notes || 'No specific notes'}</p>
+                        <div style="opacity: 0.5;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                        </div>
+                        <p class="notes-text" title="${order.notes || ''}">${order.notes || 'Notes'}</p>
                     `}
                 </div>
 
@@ -242,9 +246,6 @@ function renderOrders(orders, containerId) {
             </div>
         `;
     }).join('');
-
-    // Refresh icons
-    if (window.lucide) lucide.createIcons();
 }
 
 // Navigation Events
@@ -290,16 +291,15 @@ document.getElementById('noti-toggle').addEventListener('click', function() {
     const icon = document.getElementById('noti-icon');
     const text = document.getElementById('noti-text');
     if (alertsEnabled) {
-        icon.innerHTML = '<i data-lucide="bell"></i>';
-        text.textContent = 'Alerts Active';
+        icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
+        text.textContent = 'Alerts On';
         this.style.color = 'var(--primary)';
         alertSound.play().catch(() => {});
     } else {
-        icon.innerHTML = '<i data-lucide="bell-off"></i>';
+        icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="m2 2 20 20"/></svg>';
         text.textContent = 'Alerts Muted';
         this.style.color = 'var(--text-muted)';
     }
-    if (window.lucide) lucide.createIcons();
 });
 
 // Bot Management Events
