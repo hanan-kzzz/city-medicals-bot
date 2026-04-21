@@ -1,20 +1,15 @@
-# Dependencies
 node_modules/
-
-# WhatsApp Session (IMPORTANT: Do not share these)
-.wwebjs_auth/
-.wwebjs_cache/
-whatsapp-bot-auth/
-
-# Environment Variables
 .env
 .env.local
-
-# Logs
+.gemini/
 logs/
 *.log
-npm-debug.log*
-
-# System
+whatsapp-bot-auth/
+.wwebjs_auth/
+.wwebjs_cache/
+prescriptions/
+public/prescriptions/*
+!public/prescriptions/.gitkeep
 .DS_Store
-Thumbs.db
+dist/
+build/
