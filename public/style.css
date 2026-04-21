@@ -432,41 +432,103 @@ header {
     cursor: pointer;
 }
 
-/* Bottom Nav Styles */
-.bottom-nav {
-    display: none; /* Hidden by default on desktop */
-}
+/* 📱 Responsive Design & Media Queries */
 
-/* Media Queries */
-
-/* Tablet & Smaller Desktop */
-@media (max-width: 1024px) {
+/* Tablet & Smaller Desktop (769px to 1100px) */
+@media (max-width: 1100px) {
     .app-container {
         grid-template-columns: 80px 1fr;
     }
     aside {
-        padding: 1.5rem 0.5rem;
+        padding: 2rem 0.5rem;
         align-items: center;
     }
-    .logo-name, .nav-text {
+    .logo-name, .nav-text, .status-indicator .nav-text {
         display: none;
     }
-    .stats-grid {
-        gap: 1rem;
+    .logo-container {
+        justify-content: center;
+    }
+    .nav-item {
+        justify-content: center;
+        padding: 1rem;
+    }
+    .nav-icon {
+        font-size: 1.5rem;
     }
 }
 
-/* Mobile */
+/* Mobile (Up to 768px) */
 @media (max-width: 768px) {
     .app-container {
-        display: block;
-        padding-bottom: 80px; /* Space for the bottom nav */
-    }
-    
-    aside {
-        display: none;
+        display: block; /* Disable grid */
+        padding-bottom: 85px; /* Prevent content from being hidden by bottom nav */
     }
 
+    aside {
+        display: none; /* Hide sidebar completely */
+    }
+
+    main {
+        padding: 1.5rem 1rem;
+    }
+
+    header {
+        margin-bottom: 1.5rem;
+    }
+
+    .header-title h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Stats on Mobile */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    .stats-grid > div:last-child {
+        grid-column: span 2;
+    }
+    .stat-card {
+        padding: 1.25rem;
+        border-radius: 20px;
+    }
+    .stat-value {
+        font-size: 1.75rem;
+    }
+
+    /* Orders List on Mobile */
+    .order-card {
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+
+    .order-content {
+        grid-column: span 2;
+        padding: 0.75rem;
+        background: rgba(0,0,0,0.15);
+        border-radius: 12px;
+        order: 3;
+    }
+
+    .status-badge {
+        justify-self: end;
+    }
+
+    .action-area {
+        grid-column: span 2;
+        order: 4;
+        margin-top: 0.5rem;
+    }
+
+    .btn-complete {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem;
+    }
+
+    /* Bottom Navigation Display */
     .bottom-nav {
         display: flex;
         position: fixed;
@@ -474,11 +536,11 @@ header {
         left: 0;
         right: 0;
         background: var(--bg-glass);
-        backdrop-filter: var(--glass-blur);
+        backdrop-filter: blur(20px);
         border-top: 1px solid var(--border);
-        justify-content: space-around;
         padding: 0.75rem 0.5rem;
         z-index: 1000;
+        justify-content: space-around;
         box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
     }
 
@@ -489,9 +551,10 @@ header {
         gap: 0.25rem;
         color: var(--text-secondary);
         text-decoration: none;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         font-weight: 600;
         transition: var(--transition);
+        width: 25%;
     }
 
     .mobile-nav-item.active {
@@ -499,51 +562,33 @@ header {
     }
 
     .mobile-nav-item .nav-icon {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+    }
+
+    /* Search Box on Mobile */
+    .search-wrapper {
+        width: 100%;
+    }
+
+    /* Modal Tweaks */
+    .modal-content {
+        max-width: 95%;
     }
     
-    body {
-        padding-top: 1rem;
+    /* QR Code Tweaks */
+    #qr-container {
+        width: 100% !important;
+        padding: 1.5rem 1rem !important;
     }
-    
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
+}
+
+/* Extra Small Screens */
+@media (max-width: 400px) {
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
-    .order-card {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-        padding: 1.5rem;
-    }
-    
-    .order-card > * {
-        width: 100%;
-    }
-    
-    .order-content {
-        order: 2;
-    }
-    
-    .status-badge {
-        order: 3;
-        width: fit-content;
-    }
-    
-    .action-area {
-        order: 4;
-        justify-content: space-between;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border);
-    }
-    
-    .search-wrapper {
-        width: 100%;
+    .stats-grid > div:last-child {
+        grid-column: span 1;
     }
 }
 
