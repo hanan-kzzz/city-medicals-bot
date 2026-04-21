@@ -1,63 +1,61 @@
 :root {
     --primary: #2dd4bf;
-    --primary-muted: rgba(45, 212, 191, 0.1);
+    --primary-glow: rgba(45, 212, 191, 0.4);
+    --primary-muted: rgba(45, 212, 191, 0.08);
     --secondary: #3b82f6;
-    --accent: #f43f5e;
-    --bg-dark: #020617;
-    --bg-card: rgba(30, 41, 59, 0.7);
-    --bg-glass: rgba(15, 23, 42, 0.8);
+    --bg-dark: #010409;
+    --bg-glass: rgba(13, 17, 23, 0.7);
+    --bg-card: rgba(30, 41, 59, 0.4);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-bright: rgba(255, 255, 255, 0.15);
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.15);
     --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --glass-blur: blur(12px);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
+    --warning: #fbbf24;
+    --danger: #f43f5e;
+    --glass-blur: blur(25px);
+    --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 body {
     background: var(--bg-dark);
     background-image: 
-        radial-gradient(circle at 0% 0%, rgba(45, 212, 191, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 0% 0%, rgba(45, 212, 191, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, transparent 100%);
+    background-attachment: fixed;
     color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* Layout */
+/* Glassmorphic Container */
 .app-container {
     display: grid;
     grid-template-columns: 280px 1fr;
     min-height: 100vh;
+    animation: fadeIn 0.8s ease-out;
 }
 
-/* Sidebar */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.99); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Sidebar Upgrade */
 aside {
     background: var(--bg-glass);
-    border-right: 1px solid var(--border);
     backdrop-filter: var(--glass-blur);
-    padding: 2rem;
+    border-right: 1px solid var(--border);
+    padding: 2.5rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 3rem;
     position: sticky;
     top: 0;
     height: 100vh;
-    z-index: 50;
+    z-index: 100;
 }
 
 .logo-container {
@@ -175,119 +173,63 @@ header {
     transform: translateX(0);
 }
 
-/* Stats */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-}
-
+/* Stats Grid Upgrade */
 .stat-card {
     background: var(--bg-card);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--border);
-    padding: 1.5rem;
-    border-radius: 24px;
+    padding: 2rem;
+    border-radius: 28px;
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, var(--border-bright), transparent);
 }
 
 .stat-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-2px);
-}
-
-.stat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
-
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
+    border-color: var(--primary-glow);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .stat-value {
-    font-size: 2.25rem;
+    font-size: 2.75rem;
     font-weight: 800;
-    color: #fff;
-    line-height: 1;
+    letter-spacing: -0.05em;
+    background: linear-gradient(to bottom, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.stat-label {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-/* Order List */
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.search-wrapper {
-    position: relative;
-    width: 300px;
-}
-
-.search-input {
-    width: 100%;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border-radius: 12px;
-    color: #fff;
-    outline: none;
-    transition: var(--transition);
-}
-
-.search-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary-muted);
-}
-
-.order-grid {
-    display: grid;
-    gap: 1rem;
-}
-
+/* Order Cards Upgrade (Glass List) */
 .order-card {
     background: var(--bg-card);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1.25rem;
+    border-radius: 24px;
+    padding: 1.5rem;
     display: grid;
     grid-template-columns: auto 1fr auto auto;
     align-items: center;
     gap: 2rem;
     transition: var(--transition);
-    animation: slideIn 0.4s ease-out backwards;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .order-card:hover {
-    background: rgba(45, 55, 72, 0.4);
-    border-color: var(--border-hover);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: var(--border-bright);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* Pending Order Highlight */
 .order-card.is-pending {
-    border-left: 4px solid var(--warning);
-    background: rgba(245, 158, 11, 0.05);
-    animation: borderPulse 2s infinite;
+    border-left: 5px solid var(--warning);
+    background: linear-gradient(to right, rgba(251, 191, 36, 0.05), transparent);
 }
 
 @keyframes borderPulse {
