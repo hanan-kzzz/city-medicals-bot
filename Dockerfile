@@ -56,5 +56,8 @@ COPY . .
 # Expose the port (Render/Koyeb will use this)
 EXPOSE 3000
 
-# Start the bot
-CMD [ "node", "bot.js" ]
+# Install PM2 globally
+RUN npm install pm2 -g
+
+# Start the application using PM2
+CMD ["pm2-runtime", "ecosystem.config.js"]
