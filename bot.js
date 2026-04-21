@@ -61,7 +61,13 @@ const client = new Client({
             '--disable-dev-shm-usage',
             '--disable-extensions',
             '--disable-gpu',
-            '--no-first-run'
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process', // This saves a lot of RAM
+            '--disable-accelerated-2d-canvas',
+            '--disable-canvas-aa',
+            '--disable-2d-canvas-clip-aa',
+            '--disable-gl-drawing-for-tests'
         ]
     }
 });
