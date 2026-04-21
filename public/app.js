@@ -345,6 +345,29 @@ document.getElementById('btn-stop-bot').addEventListener('click', async function
     }, 3000);
 });
 
+document.getElementById('btn-reset-session').addEventListener('click', async function() {
+    if (!confirm('This will log out the current WhatsApp session and generate a new QR. Continue?')) return;
+    this.disabled = true;
+    this.textContent = 'Resetting...';
+    try {
+        const response = await fetch('/api/bot/reset', {
+            method: 'POST',
+            headers: { 'Authorization': `Basic ${getAuthHeader()}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+            addLog('Session reset requested. Waiting for new QR...');
+            showToast('New QR generating...');
+        }
+    } catch (e) {
+        addLog('Failed to reset session: ' + e.message);
+    }
+    setTimeout(() => {
+        this.disabled = false;
+        this.textContent = '🔄 Regenerate QR';
+    }, 5000);
+});
+
 // Search logic
 document.getElementById('order-search').addEventListener('input', (e) => {
     searchQuery = e.target.value;

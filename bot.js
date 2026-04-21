@@ -432,8 +432,32 @@ const authMiddleware = (req, res, next) => {
 app.get('/api/bot/state', (req, res) => {
     res.json({
         qr: qrCodeData,
-        status: qrCodeData ? 'AWAITING_QR' : 'CONNECTED'
+        status: qrCodeData ? 'AWAITING_QR' : (client.pupPage ? 'CONNECTED' : 'INITIALIZING')
     });
+});
+
+// API to Reset Session (Regenerate QR)
+app.post('/api/bot/reset', authMiddleware, async (req, res) => {
+    try {
+        console.log('🔄 Session reset requested. Logging out...');
+        qrCodeData = null;
+        try {
+            await client.logout();
+            await client.destroy();
+        } catch (e) {
+            console.log('Bot was already disconnected or failed to logout.');
+        }
+        
+        // Re-initialize after a short delay
+        setTimeout(() => {
+            console.log('🚀 Re-initializing client for new QR...');
+            client.initialize();
+        }, 3000);
+        
+        res.json({ success: true, message: 'Session reset. New QR generating...' });
+    } catch (err) {
+        res.status(500).json({ error: 'Reset failed' });
+    }
 });
 
 // API for the dashboard (Protected)

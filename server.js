@@ -113,6 +113,21 @@ app.get('/api/status', authMiddleware, async (req, res) => {
     }
 });
 
+// Proxy: Reset Bot Session
+app.post('/api/bot/reset', authMiddleware, async (req, res) => {
+    try {
+        const auth = req.headers.authorization;
+        const response = await fetch(`http://localhost:3005/api/bot/reset`, {
+            method: 'POST',
+            headers: { 'Authorization': auth }
+        });
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (err) {
+        res.status(503).json({ error: 'Bot is offline' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`🚀 Dashboard server running at http://localhost:${port}`);
 });

@@ -135,9 +135,10 @@
                         <div id="connection-status-text" class="stat-value" style="color: var(--success); font-size: 1.5rem; margin-top: 0.5rem;">CHECKING...</div>
                         <p id="connection-meta" class="patient-meta" style="margin-top: 0.5rem;">Authenticating with WhatsApp...</p>
                         
-                        <div class="bot-controls" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                            <button id="btn-start-bot" class="btn-complete" style="background: var(--success); border: none; flex: 1;">▶ Start Bot</button>
-                            <button id="btn-stop-bot" class="btn-complete" style="background: var(--danger); border: none; flex: 1;">⏹ Stop Bot</button>
+                        <div class="bot-controls" style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button id="btn-start-bot" class="btn-complete" style="background: var(--success); border: none; flex: 1; min-width: 120px;">▶ Start Bot</button>
+                            <button id="btn-stop-bot" class="btn-complete" style="background: var(--danger); border: none; flex: 1; min-width: 120px;">⏹ Stop Bot</button>
+                            <button id="btn-reset-session" class="btn-complete" style="background: var(--warning); border: none; flex: 1; min-width: 120px; color: #000;">🔄 Regenerate QR</button>
                         </div>
                     </div>
                 </div>
