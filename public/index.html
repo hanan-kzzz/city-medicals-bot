@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Shop | Admin Dashboard</title>
+    <title>City Medicals | Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
         <aside>
             <div class="logo-container">
                 <div class="logo-icon">🏥</div>
-                <div class="logo-name">MedicalShop</div>
+                <div class="logo-name">CityMedicals</div>
             </div>
             
             <nav>
@@ -134,6 +134,11 @@
                         <div class="stat-label">Connection Status</div>
                         <div id="connection-status-text" class="stat-value" style="color: var(--success); font-size: 1.5rem; margin-top: 0.5rem;">CHECKING...</div>
                         <p id="connection-meta" class="patient-meta" style="margin-top: 0.5rem;">Authenticating with WhatsApp...</p>
+                        
+                        <div class="bot-controls" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                            <button id="btn-start-bot" class="btn-complete" style="background: var(--success); border: none; flex: 1;">▶ Start Bot</button>
+                            <button id="btn-stop-bot" class="btn-complete" style="background: var(--danger); border: none; flex: 1;">⏹ Stop Bot</button>
+                        </div>
                     </div>
                 </div>
 
@@ -145,11 +150,10 @@
                 </div>
 
                 <div class="stat-card" style="margin-top: 1rem;">
-                    <h3 style="margin-bottom: 1rem;">Service Logs</h3>
-                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 12px; font-family: monospace; font-size: 0.8125rem; color: #34d399;">
-                        [${new Date().toLocaleTimeString()}] Authenticated with WhatsApp successfully.<br>
-                        [${new Date().toLocaleTimeString()}] Ready and listening for incoming orders.<br>
-                        [${new Date().toLocaleTimeString()}] Order #1713678291000 processed.
+                    <h3 style="margin-bottom: 1rem;">Service Activity</h3>
+                    <div id="service-logs" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 16px; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: #4ade80; max-height: 200px; overflow-y: auto;">
+                        <div>[SYSTEM] Dashboard connected to local server.</div>
+                        <div>[SYSTEM] Initializing real-time monitor...</div>
                     </div>
                 </div>
             </div>

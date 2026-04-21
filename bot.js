@@ -38,7 +38,7 @@ function saveOrder(order) {
 
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3005; // Different port to avoid conflict with dashboard server
 const authPath = process.env.WA_AUTH_PATH || path.resolve(process.env.LOCALAPPDATA || process.cwd(), 'whatsapp-bot-auth');
 
 // Initialize the client
@@ -109,7 +109,7 @@ client.on('ready', () => {
     console.log('📊 Current configuration:');
     console.log(`   STAFF_GROUP_ID: ${CONFIG.STAFF_GROUP_ID || 'NOT SET'}
    AUTHORIZED_CUSTOMERS: ${CONFIG.AUTHORIZED_CUSTOMERS.length > 0 ? CONFIG.AUTHORIZED_CUSTOMERS.join(', ') : 'ALL CUSTOMERS ALLOWED'}
-   PORT: ${port}`);
+   BOT_API_PORT: ${port}`);
     console.log('💬 Bot is now ready to receive and process messages!');
     if (!CONFIG.STAFF_GROUP_ID) {
         console.warn('WARNING: STAFF_GROUP_ID is not set in .env file.');
@@ -135,7 +135,7 @@ function scheduleDailyConfirmation() {
             try {
                 if (CONFIG.STAFF_GROUP_ID) {
                     const confirmationMessage = `✨ *SYSTEM STATUS: ONLINE* ✨\n\n` +
-                        `🏥 *Medical Bot* is working properly!\n` +
+                        `🏥 *City Medicals Bot* is working properly!\n` +
                         `📅 *Date:* ${now.toLocaleDateString()}\n` +
                         `🕐 *Time:* ${now.toLocaleTimeString()}\n\n` +
                         `The WhatsApp ordering system is ready to receive prescriptions.`;
@@ -209,7 +209,7 @@ client.on('message', async (message) => {
             // Initialize user state if it doesn't exist
             if (!userStates[contactNumber]) {
                 userStates[contactNumber] = { step: 'AWAITING_NAME' };
-                await message.reply("🌟 *HEALTHCARE AT YOUR FINGERTIPS* 🌟\n\nWelcome to our *Premium Medical Services*! 🏥\n\nWe provide a seamless way to order your medicines. To get started, please tell us your *Full Name*:\n\nനിങ്ങളുടെ *പൂർണ്ണമായ പേര്* ദയവായി രേഖപ്പെടുത്തുക:");
+                await message.reply("🌟 *HEALTHCARE AT YOUR FINGERTIPS* 🌟\n\nWelcome to *City Medicals*! 🏥\n\nWe provide a seamless way to order your medicines. To get started, please tell us your *Full Name*:\n\nനിങ്ങളുടെ *പൂർണ്ണമായ പേര്* ദയവായി രേഖപ്പെടുത്തുക:");
 
                 // Handle Welcome Voice Message
                 let voiceFilePath = path.join(__dirname, 'welcome.mp3');
@@ -408,7 +408,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Advanced Authentication Middleware
 const authMiddleware = (req, res, next) => {
-    // 1. Check for Basic Auth header
+    // 1. Check for Basic Auth header (sent by our JavaScript app.js)
     const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
     const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
 
@@ -418,26 +418,17 @@ const authMiddleware = (req, res, next) => {
         return next();
     }
 
-    // 2. If not authorized, decide what to send
-    if (req.path.startsWith('/api/') || req.path.includes('.js') || req.path.includes('.css')) {
-        // For API/Assets, send 401 but NO browser popup header
-        return res.status(401).json({ error: 'Unauthorized Access' });
-    } else {
-        // For pages, serve our PREMIUM login page
-        return res.sendFile(path.join(__dirname, 'public/login.html'));
-    }
+    // 2. If not authorized, send 401
+    return res.status(401).json({ error: 'Unauthorized Access' });
 };
 
-// Static files (Login assets are public)
-app.get('/login.html', (req, res) => res.sendFile(path.join(__dirname, 'public/login.html')));
-
-// Prescription images (Accessible through Dashboard)
-app.use('/prescriptions', express.static(path.join(__dirname, 'public/prescriptions')));
-
-// Protected Routes
-app.get('/', authMiddleware, (req, res) => res.sendFile(path.join(__dirname, 'public/index.html')));
-app.get('/style.css', (req, res) => res.sendFile(path.join(__dirname, 'public/style.css')));
-app.get('/app.js', (req, res) => res.sendFile(path.join(__dirname, 'public/app.js')));
+// API for current state (used by dashboard to get QR)
+app.get('/api/bot/state', (req, res) => {
+    res.json({
+        qr: qrCodeData,
+        status: qrCodeData ? 'AWAITING_QR' : 'CONNECTED'
+    });
+});
 
 // API for the dashboard (Protected)
 app.get('/api/orders', authMiddleware, (req, res) => {
@@ -490,8 +481,7 @@ app.get('/health-check', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-    console.log(`Dashboard available at http://localhost:${port}`);
+    console.log(`Bot internal API running on port ${port}`);
 });
 
 

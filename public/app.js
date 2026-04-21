@@ -108,6 +108,17 @@ function animateValue(id, value) {
     el.textContent = value;
 }
 
+// Logging helper
+function addLog(message) {
+    const logBox = document.getElementById('service-logs');
+    if (logBox) {
+        const entry = document.createElement('div');
+        entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logBox.prepend(entry);
+        if (logBox.children.length > 50) logBox.lastChild.remove();
+    }
+}
+
 function switchView(viewId) {
     currentView = viewId;
     
@@ -288,6 +299,52 @@ document.getElementById('noti-toggle').addEventListener('click', function() {
     }
 });
 
+// Bot Management Events
+document.getElementById('btn-start-bot').addEventListener('click', async function() {
+    this.disabled = true;
+    this.textContent = 'Starting...';
+    try {
+        const response = await fetch('/api/bot/start', {
+            method: 'POST',
+            headers: { 'Authorization': `Basic ${getAuthHeader()}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+            addLog('Bot start command sent successfully.');
+            showToast('Bot starting...');
+        }
+    } catch (e) {
+        addLog('Failed to start bot: ' + e.message);
+    }
+    setTimeout(() => {
+        this.disabled = false;
+        this.textContent = '▶ Start Bot';
+    }, 3000);
+});
+
+document.getElementById('btn-stop-bot').addEventListener('click', async function() {
+    if (!confirm('Are you sure you want to stop the WhatsApp service?')) return;
+    this.disabled = true;
+    this.textContent = 'Stopping...';
+    try {
+        const response = await fetch('/api/bot/stop', {
+            method: 'POST',
+            headers: { 'Authorization': `Basic ${getAuthHeader()}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+            addLog('Bot stop command sent.');
+            showToast('Bot stopping...');
+        }
+    } catch (e) {
+        addLog('Failed to stop bot: ' + e.message);
+    }
+    setTimeout(() => {
+        this.disabled = false;
+        this.textContent = '⏹ Stop Bot';
+    }, 3000);
+});
+
 // Search logic
 document.getElementById('order-search').addEventListener('input', (e) => {
     searchQuery = e.target.value;
@@ -325,18 +382,41 @@ async function checkBotStatus() {
         const meta = document.getElementById('connection-meta');
         const qrContainer = document.getElementById('qr-container');
         const qrPlaceholder = document.getElementById('qr-image-placeholder');
+        const sysOnline = document.getElementById('connection-status');
 
-        if (data.status === 'AWAITING_QR') {
+        if (data.status === 'OFFLINE' || data.status === 'STOPPED') {
+            statusText.textContent = 'OFFLINE';
+            statusText.style.color = 'var(--danger)';
+            meta.textContent = 'WhatsApp service is stopped.';
+            qrContainer.style.display = 'none';
+            if (sysOnline) {
+                sysOnline.querySelector('.nav-icon').textContent = '🔴';
+                sysOnline.querySelector('.nav-text').textContent = 'Service Offline';
+                sysOnline.style.color = 'var(--danger)';
+            }
+        } else if (data.status === 'AWAITING_QR') {
+            if (statusText.textContent !== 'AWAITING LOGIN') addLog('WhatsApp session expired. QR code generated.');
             statusText.textContent = 'AWAITING LOGIN';
             statusText.style.color = 'var(--warning)';
             meta.textContent = 'Please scan the QR code below';
             qrContainer.style.display = 'block';
             qrPlaceholder.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(data.qr)}" alt="QR Code">`;
+            if (sysOnline) {
+                sysOnline.querySelector('.nav-icon').textContent = '🟡';
+                sysOnline.querySelector('.nav-text').textContent = 'Login Required';
+                sysOnline.style.color = 'var(--warning)';
+            }
         } else {
+            if (statusText.textContent !== 'CONNECTED') addLog('WhatsApp Bot connected and ready.');
             statusText.textContent = 'CONNECTED';
             statusText.style.color = 'var(--success)';
             meta.textContent = 'WhatsApp Instance is active';
             qrContainer.style.display = 'none';
+            if (sysOnline) {
+                sysOnline.querySelector('.nav-icon').textContent = '🟢';
+                sysOnline.querySelector('.nav-text').textContent = 'System Online';
+                sysOnline.style.color = 'var(--success)';
+            }
         }
     } catch (e) {
         console.error('Status check failed:', e);
